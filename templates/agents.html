@@ -257,7 +257,7 @@
                     if(a.paw === paw) {
                         //update existing row
                         if(!a.trusted) {
-                            $('#'+paw+'-pid').addClass('maroon');
+                            $('#' + paw.escapeSelector() + '-pid').addClass('maroon');
                         }
                         found = true;
                     }
@@ -296,7 +296,7 @@
 
     function deleteAgent(paw){
         function deleteAgentCallback(data){
-            $('tr[id="' + paw + '"').remove();
+            $('#' + paw.escapeSelector()).remove();
             $('#agent-cnt').text(parseInt($('#agent-cnt').text()) - 1);
         }
         stream('Deleting '+paw+'. If this agent is still active, it may pop back up here.');
@@ -567,6 +567,13 @@
             $(elem).text(command);
         })
     }
+
+    String.prototype.escapeSelector = function () {
+        return this.replace(
+            /([$%&()*+,./:;<=>?@\[\\\]^\{|}~])/g,
+            '\\$1'
+        );
+    };
 
     //# sourceURL=agents.js
 </script>
