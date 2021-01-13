@@ -68,7 +68,7 @@
                     <td><p>{{ a.paw }}</p></td>
                     <td><p>{{ a.host }}</p></td>
                     <td><p>{{ a.contact }}</p></td>
-                    <td><button id="{{a.paw}}-pid" class="button-row" onclick="showAgentInfo('{{ a.paw }}')">{{ a.pid }}</button></td>
+                    <td><button id="{{a.paw|e}}-pid" class="button-row" onclick="showAgentInfo('{{ a.paw|e }}')">{{ a.pid }}</button></td>
                     <td><p>{{ a.privilege }}</p></td>
                     <td><p onclick="deleteAgent('{{ a.paw }}')">&#x274C;</p></td>
                 </tr>
@@ -247,6 +247,7 @@
             $("#agent-deadman-options").slideToggle();
         });
     });
+
     function refresh(){
         function updateTbl(data){
             $('#agent-cnt').text(data.length);
@@ -257,7 +258,10 @@
                     if(a.paw === paw) {
                         //update existing row
                         if(!a.trusted) {
-                            $('#' + paw.escapeSelector() + '-pid').addClass('maroon');
+                            let element = document.getElementById(paw + '-pid');
+                            if (element !== null) {
+                                element.classList.add('maroon');
+                            }
                         }
                         found = true;
                     }
@@ -296,7 +300,10 @@
 
     function deleteAgent(paw){
         function deleteAgentCallback(data){
-            $('#' + paw.escapeSelector()).remove();
+            let element = document.getElementById(paw);
+            if (element !== null) {
+                element.remove();
+            }
             $('#agent-cnt').text(parseInt($('#agent-cnt').text()) - 1);
         }
         stream('Deleting '+paw+'. If this agent is still active, it may pop back up here.');
@@ -567,13 +574,6 @@
             $(elem).text(command);
         })
     }
-
-    String.prototype.escapeSelector = function () {
-        return this.replace(
-            /([$%&()*+,./:;<=>?@\[\\\]^\{|}~])/g,
-            '\\$1'
-        );
-    };
 
     //# sourceURL=agents.js
 </script>
