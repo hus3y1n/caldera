@@ -222,11 +222,12 @@ class Contact(BaseWorld):
         await self._delete_gists(gist_ids=[g[1] for g in gists])
         return gist_data
 
-    async def _get_payload_content(self, payload, beacon):
-        if payload in self.file_svc.special_payloads:
-            f = await self.file_svc.special_payloads[payload](dict(file=payload, platform=beacon['platform']))
-            return await self.file_svc.read_file(f)
-        return await self.file_svc.read_file(payload)
+    async def _get_payload_content(self, payload, agent):
+        return await self.file_svc.get_file(dict(
+            file=payload,
+            paw=agent.paw,
+            platform=agent.platform,
+        ))
 
     @staticmethod
     def _build_gist_content(comm_type, paw, files):
