@@ -346,7 +346,6 @@ class PlanningService(PlanningServiceInterface, BasePlanningService):
         :rtype: list(Link)
         """
         links = []
-        print('Operation encoding: %s' % operation.file_encoding)
         for a in await agent.capabilities(abilities):
             if a.code and a.HOOKS:
                 await a.HOOKS[a.language](a)
